@@ -3,6 +3,7 @@ package com.company.shop.controlers;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -31,37 +32,66 @@ public class BasketController extends HttpServlet {
 	return basketProducts;
 	}
      
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		PrintWriter out  = response.getWriter();
-	    out.print("Salutare");    
-	    System.out.println("Produsele tale sunt: ");
-	    for(ProductDto obj : basketProducts) {
-	    	System.out.println(obj.getId());
-	    }
-		request.setAttribute("basketProducts", basketProducts);
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {  
+		this.printBasket();// in console
+		if(basketProducts.size() == 0) {
+			 PrintWriter out  = response.getWriter();
+			 out.print("No products");
+		}else {
+			request.setAttribute("basketProducts", basketProducts);
+			// Forward to home page
+			RequestDispatcher dispatcher = request.getRequestDispatcher(BASKET_VIEW);
+			dispatcher.forward(request, response);
+		}
 		
-		// Forward to home page
-		RequestDispatcher dispatcher = request.getRequestDispatcher(BASKET_VIEW);
-		dispatcher.forward(request, response);
 	}
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		basketProducts = this.getInstance();
 		ProductDto newProduct = new ProductDto();
 		
-		// fetch data from request
-		int id = Integer.parseInt(request.getParameter("id"));
+		String delete = request.getParameter("delete_product");
 		
-		//construct your new product
-		newProduct.setId(id);
+		// if the parameter is to delete a product:
+		if(delete != null && delete.equals("DeleteProduct")) {
+			this.printBasket();
+			int id = Integer.parseInt(request.getParameter("id"));
+			for (Iterator<ProductDto> iter = basketProducts.iterator(); iter.hasNext(); ) {
+				ProductDto product = iter.next();
+			    if (product.getId() == id) {
+			        iter.remove();
+			    }
+			}		
+			this.printBasket();
+			
+			response.sendRedirect("goods");
+		}else {// add a new product
 		
-		// add product to list
-		basketProducts.add(newProduct);
-		
-		System.out.println("ai adaugat un produs" + newProduct.getId());
-		
-		
-		
-		response.sendRedirect("goods");
+			
+			// fetch data from request
+			int id = Integer.parseInt(request.getParameter("id"));
+			String label = request.getParameter("label");
+			String description = request.getParameter("description");
+			
+			
+			//construct your new product
+			newProduct.setId(id);
+			newProduct.setLabel(label);
+			newProduct.setDescription(description);
+			
+			// add product to list
+			basketProducts.add(newProduct);
+			
+			System.out.println("ai adaugat un produs" + newProduct.toString());
+			response.sendRedirect("goods");
+		}
+	}
+	
+	
+	void printBasket() {
+		System.out.println("Your basket is: ");
+		for(ProductDto product:basketProducts) {
+			System.out.println(product.toString());
+		}
 	}
 
 }

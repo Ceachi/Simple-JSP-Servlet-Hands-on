@@ -14,17 +14,17 @@ public class ProductDao {
 		
 		// Eu: incep sa fac cateva produse
 		ProductDto product1 = new ProductDto();
-		product1.setId(1212121212);
+		product1.setId(1);
 		product1.setLabel("R2D2");
 		product1.setDescription("Howse cleaning robot.");
 		
 		ProductDto product2 = new ProductDto();
-		product2.setId(1313131313);
+		product2.setId(2);
 		product2.setLabel("Night Guardian");
 		product2.setDescription("Flying drone with infrared vision.");
 		
 		ProductDto product3 = new ProductDto();
-		product3.setId(1001001001);
+		product3.setId(3);
 		product3.setLabel("Little Joe");
 		product3.setDescription("Nanotechnology super small humanoid robot.");
 		

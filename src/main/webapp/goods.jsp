@@ -23,12 +23,14 @@
 			
 				 <form action="basket" method="POST"> 
 				 	<input type="hidden" name="id" value="${product.id}"/>
+				 	<input type="hidden" name="label" value="${product.label}"/>
+				 	<input type="hidden" name="description" value="${product.description}"/>
 				   	<p>
-				   		<b>${product.label}</b><br/>
-				   		<span>${product.description}</span> 
+				   		Product: <b>${product.label}</b> 
+				   		Description: <span>${product.description}</span> 
 				   	</p>
 				   	
-				   	<input type="submit" value="Submit"/>
+				   	<input type="submit" value="Add Product"/>
 			   	
 			   	</form>
    	
