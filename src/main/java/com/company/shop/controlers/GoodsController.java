@@ -19,7 +19,6 @@ import com.company.shop.services.ProductService;
 import com.company.shop.services.UserService;
 
 /**
- * Controller ce gestioneaza pagina mea de produse
  * Servlet implementation class Goods
  */
 @WebServlet("/goods")

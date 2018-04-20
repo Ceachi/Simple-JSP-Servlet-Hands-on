@@ -22,6 +22,7 @@ import com.company.shop.model.ProductDto;
 public class BasketController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String BASKET_VIEW= "basket.jsp";
+	private static final String EMPTY_BASKET_VIEW= "emptyBasket.jsp";
 	
 	static List<ProductDto> basketProducts;
 	
@@ -29,14 +30,20 @@ public class BasketController extends HttpServlet {
 		if(basketProducts==null) {
 			return new ArrayList<ProductDto>();		
 		}
-	return basketProducts;
+		return basketProducts;
 	}
      
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {  
 		this.printBasket();// in console
 		if(basketProducts.size() == 0) {
+			request.setAttribute("basketProducts", basketProducts);
+			
 			 PrintWriter out  = response.getWriter();
 			 out.print("No products");
+			 
+			//RequestDispatcher dispatcher = request.getRequestDispatcher(EMPTY_BASKET_VIEW);
+			//dispatcher.forward(request, response);
+			
 		}else {
 			request.setAttribute("basketProducts", basketProducts);
 			// Forward to home page
@@ -47,17 +54,17 @@ public class BasketController extends HttpServlet {
 	}
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		basketProducts = this.getInstance();
-		ProductDto newProduct = new ProductDto();
 		
 		String delete = request.getParameter("delete_product");
 		
 		// if the parameter is to delete a product:
 		if(delete != null && delete.equals("DeleteProduct")) {
 			this.printBasket();
-			int id = Integer.parseInt(request.getParameter("id"));
+			
+			String id = request.getParameter("id");
 			for (Iterator<ProductDto> iter = basketProducts.iterator(); iter.hasNext(); ) {
 				ProductDto product = iter.next();
-			    if (product.getId() == id) {
+			    if (product.getId().equals(id)) {
 			        iter.remove();
 			    }
 			}		
@@ -66,15 +73,17 @@ public class BasketController extends HttpServlet {
 			response.sendRedirect("goods");
 		}else {// add a new product
 		
+			// create new empty product
+			ProductDto newProduct = new ProductDto();
+			
 			
 			// fetch data from request
-			int id = Integer.parseInt(request.getParameter("id"));
+			String id = request.getParameter("id");
 			String label = request.getParameter("label");
 			String description = request.getParameter("description");
 			
 			
 			//construct your new product
-			newProduct.setId(id);
 			newProduct.setLabel(label);
 			newProduct.setDescription(description);
 			

@@ -32,3 +32,6 @@
 		   	<input type="submit"  value="Delete" />
    		</form>
 </c:forEach>  
+
+
+	<a href="<c:url value="goods" />" >Show Products</a>
